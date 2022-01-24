@@ -190,7 +190,7 @@
 		 <br> <br> <br> 
 		 
 		 
-		 <!-- Button trigger modal -->
+		 <!-- Button trigger modal. -->
 		 <div align="center" class="container"> 
 		 	<button type="button" id="whatIsIt" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
 			 	 What is Mastermind? 
