@@ -255,7 +255,7 @@
 			</div>	
 	    </div>
 	    <div class="col-12 col-xl-2 col-md-4">
-	      <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">s
+	      <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
 			  <div id = "l5unlock" class="card-header">
 			  	LOCKED
 			  	<i class="bi bi-lock-fill"></i>	

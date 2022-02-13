@@ -19,7 +19,7 @@
   		background: linear-gradient(-45deg, #ADFF2F, palegreen, #00FF7F);
   		background-repeat: no-repeat;
   		background-size: cover;
-  		/*background-color: lightgreen;*/
+  		/*background-color: lightgreen;..*/
   	}
   	
   	.advice {
