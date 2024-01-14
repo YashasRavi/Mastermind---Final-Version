@@ -16,6 +16,7 @@ SOME EXTRA IDEAS:
 .NODE0 {
   height: 100px;
   width: 150px;
+  margin-top: 50px;
   background-color: #555;
   position: relative;
   top: 30px;
@@ -36,6 +37,7 @@ SOME EXTRA IDEAS:
 
 .L0-1:hover {
   border-bottom: 5px dotted blue;
+  cursor: pointer;
 }
 
 .NODE1 {
@@ -61,6 +63,7 @@ SOME EXTRA IDEAS:
 
 .L1-2:hover {
   border-bottom: 5px dotted blue;
+  cursor: pointer;
 }
 
 .NODE2 {
@@ -86,6 +89,7 @@ SOME EXTRA IDEAS:
 
 .L1-3:hover {
   border-bottom: 5px dotted blue;
+  cursor: pointer;
 }
 
 .NODE3 {
@@ -111,6 +115,7 @@ SOME EXTRA IDEAS:
 
 .L2-4:hover {
   border-bottom: 5px dotted blue;
+  cursor: pointer;
 }
 
 .NODE4 {
@@ -136,6 +141,7 @@ SOME EXTRA IDEAS:
 
 .L3-5:hover {
   border-bottom: 5px dotted blue;
+  cursor: pointer;
 }
 
 .NODE5 {

@@ -1,9 +1,36 @@
-<%@ page  session = "true" import = "Mastermind_java.userManager" import = "Mastermind_java.user"%>
+<%@ page session = "true" import = "Mastermind_java.userManager" import = "Mastermind_java.user"%>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%
+	user tempUser = null;
+	String userNameToShow = null;
+    if (session != null && session.getAttribute("loggedUser") != null) {
+        tempUser = (user) session.getAttribute("loggedUser");
+        userNameToShow = tempUser.getUsername();
+        
+        if (tempUser.getUsername().length() > 100) {
+        	userNameToShow = userNameToShow.substring(0,100) + "...";
+        }
+        
+        // Let's say the user has earned points, and you update it
+        //int newPoints = calculateNewPoints(currentUser);
+        //currentUser.setPoints(newPoints);
+
+        // Update the user object in the session
+       
+
+        // Now the updated user object is in the session and can be accessed in profile.jsp
+    } else {
+        // User is not logged in or session has expired
+        response.sendRedirect("Mastermind_index.jsp");
+        return;
+    }
+%>
+
 
 <html>
 
 	<head>
-	  <title> Mastermind - Profile Page </title>
+	  <title> Profile Page </title>
 	  <meta charset="UTF-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
@@ -18,7 +45,7 @@
 	  -->
 	  <style>
 	  		body {
-	  			margin: 50px;
+	  			padding: 50px;
 	  			background: linear-gradient(45deg, orange, lightblue);
 	  		}
 	  			  		
@@ -102,15 +129,16 @@
 	</head>
 	<body>
 	
+	
 	<div class="display-3" align="center"> 
-	<strong> MASTERMIND - PROFILE PAGE </strong> </div>
+	<strong> PROFILE PAGE </strong> </div>
 	
 	
 	<br>
 	<br>
 	
 	<h2 class="testmystuff" align="center">
-		Username: <%= request.getParameter("username") %>
+		Username: <%= userNameToShow %>
 	</h2>
 	
 	<h2 class="showpoints" align="center"> 
@@ -273,8 +301,8 @@
 	<br> <br> <br> 
 		
 	<div align="center" id="homeBtn"> 
-		<button type="button" class="btn btn-primary" onclick="location.href = 'Mastermind_index.jsp'">
-		  Return home!
+		<button type="button" class="btn btn-danger" onclick = "location.href = 'logout'">
+		  Logout
 		  <i class="bi bi-house-fill"></i>
 		</button>
 	</div>
@@ -290,6 +318,7 @@
 <script>
 	
 	
+	<%--
 	document.body.style.visibility = "hidden";
 	var userCheck = <%= userManager.checkUser(request.getParameter("username"), request.getParameter("password")) %>;
 	
@@ -297,16 +326,19 @@
 		
 		userCheck = false;
 	}
-		
+	--%>
+	
+	userCheck = true;
 	if (userCheck == true) {
 		document.body.style.visibility = "visible";
+		<%--
 		<%
 			String k = request.getParameter("username");
 			user tempUser = userManager.getUser(k);
 		%>
-		
+		--%>
 		let showPoints = document.querySelector(".showpoints");
-		showPoints.innerHTML = "Total Points: " + <%= tempUser.getTotalPoints()%>;
+		showPoints.innerHTML = "Total Points: " + <%= tempUser.getTotalPoints()%> + "/300";
 		showPoints.style.opacity = 0;
 		
 		let uName = document.querySelector(".testmystuff");
@@ -332,10 +364,10 @@
 		tick();
 		
 		let l1Link = document.querySelector("#level1Link");
-		l1Link.href = 'Level1.jsp?uId=<%=request.getParameter("username")%>';
+		l1Link.href = 'LevelGenerator.jsp?uId=<%=tempUser.getUsername()%>&level=level1';
 		
 		let l2Link = document.querySelector("#level2Link");
-		l2Link.href = 'Level2.jsp?uId=<%=request.getParameter("username")%>';
+		l2Link.href = 'LevelGenerator.jsp?uId=<%=tempUser.getUsername()%>&level=level2';
 		l2Link.style.visibility = "hidden";
 	    if (<%= tempUser.getIsFinished1() %>) {
 	    	l2Link.style.visibility = "visible";
@@ -343,7 +375,7 @@
 		}
 		
 		let l3Link = document.querySelector("#level3Link");
-		l3Link.href = 'Level3.jsp?uId=<%=request.getParameter("username")%>';
+		l3Link.href = 'LevelGenerator.jsp?uId=<%=tempUser.getUsername()%>&level=level3';
 		l3Link.style.visibility = "hidden";
 	    if (<%= tempUser.getIsFinished2() %>) {
 	    	l3Link.style.visibility = "visible";
@@ -351,7 +383,7 @@
 		}
 		
 		let l4Link = document.querySelector("#level4Link");
-		l4Link.href = 'Level4.jsp?uId=<%=request.getParameter("username")%>';
+		l4Link.href = 'LevelGenerator.jsp?uId=<%=tempUser.getUsername()%>&level=level4';
 		l4Link.style.visibility = "hidden";
 	    if (<%= tempUser.getIsFinished3() %>) {
 	    	l4Link.style.visibility = "visible";
@@ -359,13 +391,15 @@
 		}
 		
 		let l5Link = document.querySelector("#level5Link");
-		l5Link.href = 'Level5.jsp?uId=<%=request.getParameter("username")%>';
+		l5Link.href = 'LevelGenerator.jsp?uId=<%=tempUser.getUsername()%>&level=level5';
 		l5Link.style.visibility = "hidden";
 	    if (<%= tempUser.getIsFinished4() %>) {
 	    	l5Link.style.visibility = "visible";
 	    	document.querySelector("#l5unlock").innerHTML = "UNLOCKED";
 		}
 		
+	    
+	    
 	}
 	else {
 		alert("The username an password you have entered to not match! Either you entered the wrong password or another user has the same username. Try with a different login!");

@@ -7,11 +7,10 @@
 	  <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
 	  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	  <style> 
-	  
 	  	body {
-	  		margin: 50px;
+	  		padding: 50px;
 	  		background: linear-gradient(45deg, green, blue);
-	  		background-repeat: no-repeat;
+	  		/*background-repeat: no-repeat;*/
 	  	}
 	  	
 	  	#maintitle {
@@ -25,6 +24,7 @@
 	  	
 	  	#maintitle_mobile {
 	  		display: none;
+	  		font-size: 20px;
 	  	}
 	  	
 	  	#subtitle {
@@ -38,50 +38,11 @@
 	  	}
 	  	
 	  	#mainimage {
-	  		border: 10px solid lightgreen;
+	  		border: 7px solid lightgreen;
+	  		width: 100%;
 	  	}
 	  	
-	  	@media only screen and (max-width: 1350px) {
-	  		body {
-				background: teal;
-			}
-	  		
-	  	}
-	  	
-	  	@media only screen and (max-width: 992px) {
-	  		#mainimage {
-	  			display: none;
-	  		}  
-		}
-		
-		@media only screen and (max-width: 400px) {
-			
-			#maintitle {
-				display: none;
-			}
-			
-			#maintitle_mobile {
-				display: block;
-				color: lightgreen;
-				font-weight: bold;
-		  		text-decoration: underline;
-	 			text-decoration-color: lightgreen;
-			}
-			
-			#input1 {
-				width: 120px;
-			}
-			
-			#input2 {
-				width: 120px;
-			}
-			
-			#whatIsIt {
-				margin-right: 60px;
-			}
-			
-			
-		}	
+	  	/* ---- */	
 	  	
 	  	.card {
 	  		border-top: 7px solid lightgreen;
@@ -114,14 +75,53 @@
 	  	}
 	  	
 	  	
+	  	@media only screen and (max-width: 992px) {
+	  		#mainimage {
+	  			display: none;
+	  		}  
+	  		#whatIsIt {
+				font-size: 15px;
+			}
+		}
+		
+		@media only screen and (max-width: 400px) {
+			
+			#maintitle {
+				display: none;
+			}
+			
+			#maintitle_mobile {
+				display: block;
+				color: lightgreen;
+				font-weight: bold;
+		  		text-decoration: underline;
+	 			text-decoration-color: lightgreen;
+			}
+			
+			#input1 {
+				width: 120px;
+			}
+			
+			#input2 {
+				width: 120px;
+			}
+
+			
+			
+		}
+		
+	  	
+	  	
+	  	
+	  	
 	  </style>
 	</head>
   
 	  <body>
 	  
-	  		<h1 id = "maintitle_mobile" class="display-2" align="center">
+	  		<h2 id = "maintitle_mobile" class="display-2" align="center">
 	  			MASTERMIND 
-	  		</h1>
+	  		</h2>
 		  	<h1 id="maintitle" class="display-2" align="center"> 
 		  		MASTERMIND 
 		  	</h1>
@@ -161,17 +161,27 @@
 							<input type="submit" id="subBtn" value="Submit" />
 						 </form> 
 						 --> 
+						 <form action="login" method="post">
+						 	 <% if (session != null && session.getAttribute("loginError") != null) { %>
+						 	 	<div class="alert alert-danger" role="alert">
+								  	<%= session.getAttribute("loginError") %>
+								</div>
+							    <% session.removeAttribute("loginError"); %>
+							 <% } %>
+						 	 
 						 
-						 Username: 
-						 <br> 
-						 <textarea id="input1" name = "username"></textarea>
-						 <br> 
-						 <br> 
-						 Password: 
-						 <br> 
-						 <textarea id="input2" name = "password"></textarea>
-						 <br> <br> 
-						 <button id="subBtn" type = "submit" name="submit">Submit</button>
+						 	 Username: 
+							 <br> 
+							 <input type="text" id="input1" name="username" required>
+							 <br> 
+							 <br> 
+							 Password: 
+							 <br> 
+							 <input type="password" id="input2" name="password" required>
+							 <br> <br> 
+							 <button id="subBtn" type = "submit" name="submit">Submit</button>
+						 </form>
+						 
 						 
 					  </div>
 					</div>						
@@ -191,7 +201,7 @@
 		 
 		 
 		 <!-- Button trigger modal. -->
-		 <div align="center" class="container"> 
+		 <div align="center" id="btn_container"  class="container"> 
 		 	<button type="button" id="whatIsIt" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
 			 	 What is Mastermind? 
 			</button> 	
@@ -225,7 +235,7 @@
 			<br> <br> <br> <br>
 			
 			<!-- Button trigger modal -->
-		 <div align="center" class="container" id="buttonBox"> 
+		 <div align="center" id="btn_container" class="container" id="buttonBox"> 
 		 	<button type="button" id="whatIsIt" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal2">
 			 	 How does Mastermind work? 
 			</button> 	
@@ -278,7 +288,7 @@
 			
 			<br> <br> <br> <br>
 			 
-			<div align="center" class="container"> 
+			<div align="center" id="btn_container"  class="container"> 
 				<button class="btn btn-info" id="whatIsIt" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
 				  About the author!
 				</button>
@@ -325,17 +335,6 @@
 
 <script>
 	
-	/*
-	if (document.querySelector("#subBtn").clicked == true) {
-		if (document.querySelector("#input1").value.length == 0 || document.querySelector("#input2").value.length == 0) {
-			alert("Please enter a valid username and password!")
-		} 
-		else {
-			document.querySelector("#userInput").action = "Mastermind_profile.jsp";
-			
-		}
-	}
-	*/
 	
 	
 	let MainImage = document.querySelector("#mainimage");
@@ -387,6 +386,13 @@
 	};
 
 	tick();
+	
+	<% if (session != null && session.getAttribute("newUserConfirmed") != null) { %>
+	 	window.onload = function () {
+	 		alert("A user account has been created with the credentials you entered. Please log in to access your profile!");
+	 	}
+	    <% session.removeAttribute("newUserConfirmed"); %>
+	<% } %>
 	
 
 </script>

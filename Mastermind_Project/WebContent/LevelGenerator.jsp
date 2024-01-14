@@ -1,13 +1,34 @@
 <%@ page session = "true" import = "Mastermind_java.userManager" import = "Mastermind_java.user"%>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%
+	user tempUser = null;
+    if (session != null && session.getAttribute("loggedUser") != null) {
+        tempUser = (user) session.getAttribute("loggedUser");
+
+        // Let's say the user has earned points, and you update it
+        //int newPoints = calculateNewPoints(currentUser);
+        //currentUser.setPoints(newPoints);
+
+        // Update the user object in the session
+        //session.setAttribute("loggedUser", currentUser);
+
+        // Now the updated user object is in the session and can be accessed in profile.jsp
+    } else {
+        // User is not logged in or session has expired
+        response.sendRedirect("Mastermind_index.jsp");
+        return;
+    }
+%>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title> Mastermind - Level 1 </title>
+  <title> Mastermind - Level Generator </title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href = "Level1.css">
+  <link rel="stylesheet" href = "LevelGenerator.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   
   
@@ -15,15 +36,32 @@
 
 <style> 
 
-  	body {
-  		background: linear-gradient(-45deg, #ADFF2F, palegreen, #00FF7F);
+  	html {
+  		background: linear-gradient(-45deg, #ADFF2F, palegreen, #00FF7F) no-repeat fixed;
   		background-repeat: no-repeat;
   		background-size: cover;
+  		width: 100vw;
   		/*background-color: lightgreen;..*/
+  	}
+  	
+  	body {
+  		min-height: 100%;
+  		width: 100vw;
+  		/*margin: 50px;*/
+  		background: inherit;
+  		position: relative;
   	}
   	
   	.advice {
   		display: none;
+  	}
+  	
+  	#navBtn {
+  		margin-left: 20px;
+  	}
+  	
+  	.introStuff {
+  		width: 80%;
   	}
   	
   	.title {
@@ -42,8 +80,12 @@
 	  margin-right: 50px;
 	}
 	
-	.profileBtn {
-		background-color: yellow;
+	#profileBtn {
+		font-family: verdana;
+		font-size: 25px;
+	}
+	
+	#startBtn {
 		font-family: verdana;
 		font-size: 25px;
 	}
@@ -55,6 +97,16 @@
 	hr.rounded {
 		border-top: 8px solid black;
 		border-radius: 5px;
+		width: 100%;
+	}
+	
+	.showQ_container {
+		width: 100%;
+	}
+	
+	.showQ_container button {
+		width: 80%;
+		margin-left: 10%;
 	}
   	
 	.question {
@@ -68,7 +120,6 @@
 	  position: absolute;
 	  top: 550px;
 	  left: 1200px;
-	
 	  z-index: 1;
 	}
 	
@@ -99,33 +150,11 @@
 		margin-left: 200px;
 	}
 	
-	@media only screen and (max-width: 1460px) {
-		body {
-			background: lightgreen;
-		}
-		
-		.advice {
-			display: block;
-			font-weight: bold;
-			margin: 20px;
-		}
-		
-		.title {
-			display: none;
-		}
-		
-		.introStuff {
-			display: none;
-		}
-		
-		.question {
-			top: 120px;
-			/*margin-right: 30px;*/
-		}
-		
-		
-		
-	}
+	@media screen and (max-width: 999px) {
+	    #page_navbar {
+	        display: none;
+	    }
+}
 
 </style>
 
@@ -133,13 +162,46 @@
 
 <!-- Access user object  -->
 <%
-	String k = request.getParameter("uId");
-	user tempUser = userManager.getUser(k);
+	String level = "0";
+
+	//String k = request.getParameter("uId");
+	String chosenLevel = request.getParameter("level");
+	//user tempUser = userManager.getUser(k);
+	
+	if (chosenLevel.equals("level1")) {
+		level = "1";
+	}
+	else if (chosenLevel.equals("level2")) {
+		level = "2";
+	}
+	else if (chosenLevel.equals("level3")) {
+		level = "3";
+	}
+	else if (chosenLevel.equals("level4")) {
+		level = "4";
+	}
+	else if (chosenLevel.equals("level5")) {
+		level = "5";
+	}
+	
+	String pointsPerCheckpoint = String.valueOf(5+Integer.parseInt(level)*5);
+	String pointsPerNode = String.valueOf(1.25+Integer.parseInt(level)*1.25);
+	
 %>
 
 <p class="advice"> 
 	The nodes are to your right!
 </p>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" id = "page_navbar">
+	<button class = "btn btn-primary" id = "navBtn" onclick="location.href = 'Mastermind_profile.jsp?username=<%=tempUser.getUsername()%>'">
+		Profile
+	</button>
+	<button class = "btn btn-danger" id = "navBtn" onclick = "location.href = 'logout'">
+		Logout
+	</button>
+	
+</nav>
 
 <div class="introStuff"> 
 	<br> <br> 
@@ -148,52 +210,62 @@
 	</h2>
 	
 	<h4 class="directions"> 
-		LEVEL 1
+		LEVEL <%= level %>
 		<br>
 		<br> 
-		This is the first level of the Mastermind game. Click the left or right edge coming out of the topmost node, and you will see
+		Click the left or right edge coming out of the topmost node, and you will see
 		the first set of questions appear on the right! For more specific directions, revisit your profile page by clicking the button below!
 		<br>
 		<br> 
-		Each checkpoint is worth 10 POINTS. Good luck!
+		Each checkpoint is worth <%= pointsPerCheckpoint %> POINTS. Good luck!
 	</h4>
 	<br> <br> 
 	<div align="center"> 
-		<button class="profileBtn" onclick="location.href = 'Mastermind_profile.jsp?username=<%=tempUser.getUsername()%>&password=<%=tempUser.getPassword()%>'" > 
+		<button class="btn btn-warning" id="startBtn">
+			Start Level
+		</button>
+		<br>
+		<br>
+	
+		<button class="btn btn-warning" id="profileBtn" onclick="location.href = 'Mastermind_profile.jsp?username=<%=tempUser.getUsername()%>'"> 
 			Back to Profile Page
 		</button>
 	</div>
 	
 	<br> <br> <br> 
-	
-	<hr class="rounded">
+
 
 </div>
 
 <br> <br> <br> 
 
-<form name = "checkform" class = "checkpointForm" action="Level1Checkpoint.jsp">	
-	<input type="hidden" name="user" value='<%= request.getParameter("uId") %>'>
-	<input type="hidden" name="level" value="1">
+<form name = "checkform" class = "checkpointForm" action="LevelCheckpoint.jsp">	
+	<input type="hidden" name="user" value='<%= tempUser.getUsername() %>'>
+	<input type="hidden" name="level" value="">
 	<input type="hidden" name="finishCheck" value="">
-	<input type="hidden" name="ConAns1String" value=""> 
-	<input type="hidden" name="Connections1String" value=""> 
+	<input type="hidden" name="connectionAnswerString" value=""> 
+	<input type="hidden" name="connectionString" value=""> 
 	<input type ="hidden" name = "checkBtn" value="submit" class = "updateBtn"/>	
 </form>
 
 
 <!-- Question and answer box -->
-<div class = "question"></div>
-<textarea class="answer1" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
-<textarea class="answer2" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
-<textarea class="answer3" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
-<button class = "sub" type = "submit" name="submit">Submit</button>
-<button id = "hintBtn" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal3">
-  Get a hint for this question!
-</button>
-<button class="pBtn" onclick="location.href = 'Mastermind_profile.jsp?username=<%=tempUser.getUsername()%>&password=<%=tempUser.getPassword()%>'"> 
- Back to Profile Page
-</button>
+<!--  
+<div class="level_question_container">
+	<div class = "question"></div>
+	<textarea class="answer1" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
+	<textarea class="answer2" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
+	<textarea class="answer3" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
+	<button class = "sub" type = "submit" name="submit">Submit</button>
+	<button id = "hintBtn" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+	  	Get a hint for this question!
+	</button>
+	<button class="pBtn" onclick="location.href = 'Mastermind_profile.jsp?username=<%=tempUser.getUsername()%>&password=<%=tempUser.getPassword()%>'"> 
+	 	Back to Profile Page
+	</button>
+</div>
+-->
+
 
 <!-- Hint Modal  -->
 			<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -233,34 +305,100 @@
 <!-- All the nodes and edges! -->
 <div class = "allstuff">
 	<div class="NODE0"></div>
-	<div class = "L0-1"></div>
-	<div class = "NODE1"></div>
-	<div class = "L1-2"></div>
-	<div class = "NODE2"></div>
-	<div class = "L1-3"></div>
-	<div class = "NODE3"></div>
-	<div class = "L2-4"></div>
-	<div class = "NODE4"></div>
-	<div class = "L3-5"></div>
-	<div class = "NODE5"></div>
-	<div class = "L4-6"></div>
-	<div class = "L5-6"></div>
-	<div class = "NODE6"></div>
-	<div class = "L4-7"></div>
-	<div class = "L5-7"></div>
-	<div class = "NODE7"></div>
-	<div class = "L6-8"></div>
-	<div class = "NODE8"></div>
-	<div class = "L7-9"></div>
-	<div class = "NODE9"></div>
-	<div class = "L8-10"></div>
-	<div class = "L9-10"></div>
-	<div class = "NODE10"></div>
-	<div class = "L10-M"></div>
-	<div class = "NODEM"></div>
+	<div class = "L0-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE1" id = "node_type"></div>
+	<div class = "L1-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE2" id = "node_type"></div>
+	<div class = "L1-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE3" id = "node_type"></div>
+	<div class = "L2-4" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE4" id = "node_type"></div>
+	<div class = "L3-5" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE5" id = "node_type"></div>
+	<div class = "L4-6" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "L5-6" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE6" id = "node_type"></div>
+	<div class = "L4-7" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "L5-7" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE7" id = "node_type"></div>
+	<div class = "L6-8" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE8" id = "node_type"></div>
+	<div class = "L7-9" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE9" id = "node_type"></div>
+	<div class = "L8-10" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "L9-10" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODE10" id = "node_type"></div>
+	<div class = "L10-M" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"></div>
+	<div class = "NODEM" id = "node_type"></div>
 	<br> <br> <br> <br> <br> 
 	<p class = "lastText"> </p>
 </div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+	 <div class="offcanvas-header">
+	   <h5 class="offcanvas-title" id="offcanvasExampleLabel">Question Panel</h5>
+	   <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	 </div>
+	 <div class="offcanvas-body">
+	   <div class="level_question_container">
+			<div class = "question_in_side">
+				<div class = "card" id = "q1_card">
+					<div class = "card-header" id = "q1_card_title">
+						Question 1
+					</div>
+					<div class = "card-body" id = "q1_card_question">
+						<!-- Question 1 goes here  -->
+					</div>
+					<div class = "card-footer" id = "q1_card_answer">
+						<!-- Answer 1 goes here  -->
+					</div>
+				</div>
+				
+				<br>
+				
+				<div class = "card" id = "q2_card">
+					<div class = "card-header" id = "q2_card_title">
+						Question 2
+					</div>
+					<div class = "card-body" id = "q2_card_question">
+						<!-- Question 2 goes here  -->
+					</div>
+					<div class = "card-footer" id = "q2_card_answer">
+						<!-- Answer 2 goes here  -->
+					</div>
+				</div>
+				
+				<br>
+				
+				<div class = "card" id = "q3_card">
+					<div class = "card-header" id = "q3_card_title">
+						Question 3
+					</div>
+					<div class = "card-body" id = "q3_card_question">
+						<!-- Question 3 goes here  -->
+					</div>
+					<div class = "card-footer" id = "q3_card_answer">
+						<!-- Answer 3 goes here  -->
+					</div>
+				</div>
+				
+			</div>
+			<textarea class="answer1" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
+			<br>
+			<textarea class="answer2" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
+			<br>
+			<textarea class="answer3" name="43243" rows="2" cols = "15" placeholder="Enter answer here!"> </textarea>
+			<br>
+			<button class = "sub" type = "submit" name="submit">Submit</button>
+			<button id = "hintBtn" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+			  	Get a hint for this question!
+			</button>
+			<button class="pBtn" onclick="location.href = 'Mastermind_profile.jsp?username=<%=tempUser.getUsername()%>&password=<%=tempUser.getPassword()%>'"> 
+			 	Back to Profile Page
+			</button>
+		</div>
+	 </div>
+</div>	
 
 <br> <br> <br> <br> <br> 
 
@@ -276,15 +414,35 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 <script>
 
 
 //let tStuff = document.querySelector(".teststuff");
 
-let userConnections1 = '<%= tempUser.getConnections1String() %>'
-let userConAns1 = '<%= tempUser.getConAns1String() %>'
+let userConnections1 = '<%= tempUser.getConnectionString(level) %>'
+let userConAns1 = '<%= tempUser.getConnectionAnswerString(level) %>'
+let userLevel = '<%= tempUser.getLevel() %>'
+let userNodes = <%= tempUser.getNodeData(level) %>
+let userQuestions = <%= tempUser.getQuestionData(level) %>
+let userAnswers = <%= tempUser.getAnswerData(level) %>
+let userHints = <%= tempUser.getHintData(level) %>
+let userHintLinks = <%= tempUser.getHintLinkData(level) %>
+let bodyBackgroundColor = '<%= tempUser.getBodyBackground(level) %>'
+let nodeBackgroundColor = '<%= tempUser.getNodeBackground(level) %>'
 //tStuff.innerHTML = userConnections1 + " " + userConAns1;
+
+
+// Set background color
+window.onload = function() {
+    document.documentElement.style.background = bodyBackgroundColor;
+};
+
+let nodeList = document.querySelectorAll("#node_type");
+
+nodeList.forEach(function(currentNode) {
+	currentNode.style.background = nodeBackgroundColor;
+});
 
 
 
@@ -311,9 +469,13 @@ for (let j = 0; j < userConAns1.length; j++) {
 }
 
 //The nodes array basically stores the names of the nodes that are to be unlocked in a specific level.
-let nodes1 = ["BEGIN!!", "PEMDAS", "Typecasting", "Number Sets", "Equations", "Measurement", "Forces", "Reactions", "Mean", "Density", "Proportions", "1-Node11", "1-Node12", "Click above line to finish!"];
+//let nodes1 = ["BEGIN!!", "PEMDAS", "Typecasting", "Number Sets", "Equations", "Measurement", "Forces", "Reactions", "Mean", "Density", "Proportions", "1-Node11", "1-Node12", "Click above line to finish!"];
+let nodes1 = userNodes;
+
 
 //Hints for each connection that appears in the modal!
+let hints1 = userHints;
+/*
 let hints1 = ["NULL", 
 			"In Java, the (int) function removes the decimal part of a number. For instance, (int)(4.2) = 4. Similarly in python, int(4.2) = 4. This is called typecasting. Remember in the order of operations, whatever is inside the parenthesis is always done first! So (int)(4+3) = (int)(7) = 7. ", 
 			"Integers include positive and negative numbers and have NO decimals; for instance, -4, 2, and 0 are integers while 0.5 and 1.4 aren't. <br><br> Real numbers include decimals AND integers; thus, numbers such as 1/3, 2.5, -0.4 are all real.  <br><br> Natural numbers are integers GREATER than 0; thus, these would be the counting numbers 1,2,3, etc. <br> <br>Remember that in the order of operations, parenthesis come first! ", 
@@ -328,8 +490,10 @@ let hints1 = ["NULL",
 			"An important thing to know about these questions is that for a proportion y = kx, then (average of y) = k*(average of x). This can be used to solve questions #1 and #2. <br> <br> For question #3, it is helpful to write the average of L and N in TERMS of the average of G. As such, (average G) = 2*((1/3) * average G) + m * ((2/3) * average G). Now you can solve for m!", 
 			"Recall that Mass/Volume = density, and make sure to remember that direct proportion between A and B means A=kB and inverse proportion means AB = k. <br> <br> Question 1: Recall that Mass = volume * density, so what happens to the mass if volume is tripled and density is doubled? <br> <br> Question 2: If D is inversely proportional to d, then D*d = constant of proportionality. Recall that d = m/V, so after substitution notice that we have mD/V = 2*(mD/2V)! <br> <br> Question 3: Note that d = m/V so if V = kT where T is temperature, then d = m/(kT). Thus, what happens if T is halved?"
 			];
-
+*/
 //Links that the "Click for more information!" box redirects user to in the Hint modal.
+let hintLinks = userHintLinks;
+/*
 let hintLinks = [
 	"NULL",
 	"https://en.wikipedia.org/wiki/Type_conversion",
@@ -345,74 +509,112 @@ let hintLinks = [
 	"https://www.mathsisfun.com/algebra/proportions.html",
 	"https://www.mathsisfun.com/algebra/proportions.html"
 ];
+*/
 
+let questions1 = []
+
+// Populate question-answer array using data from server
+for (let i = 0; i < userQuestions.length; i++) {
+	currQuestionSet = userQuestions[i];
+	currAnswerSet = userAnswers[i];
+	
+	let questionAnswerPairs = [];
+	
+	for (let j = 0; j < currQuestionSet.length; j++){
+		let currPair = [currAnswerSet[j], currQuestionSet[j]];
+		questionAnswerPairs.push(currPair);	
+	}
+	
+	questions1.push(questionAnswerPairs);
+}
+
+/*
 let questions1 = [
       // [Answer, Question]
-   /*0*/ [
-             [0, "NULL"] /*set to null so tracing code is easier!*/
+      	 // 0 - set to null so tracing code is easier!
+  		 [
+             [0, "NULL"] 
          ],
-
-    /*1*/[
+		 // 1
+    	 [
              [8, "Evaluate the Java expression 5+(int)(3.7)."],
              [15, "Evaluate the Python expression int(3+int(12.4))."],
              [0, "Evaluate the Java expression ((int)(0.7)/4)."]
          ],
-   /*2*/ [
+         // 2
+   		 [
              [1, "If n is a natural number and (3+(4+n)) is even, determine the lowest possible value of n."],
              [3, "If n is a natural number such that 1 < n < 4, and (7+3n)/(5-n) is an integer, determine the value of n."],
              [4, "If q is a positive real number and q/sqrt(2) is an integer, determine the lowest possible value of q^4."]
          ],
-   /*3*/ [
+         // 3
+   		 [
              [2, "If the Java expression (x+Integer.parseInt('12')) = 14 holds for a real number x, determine the value of x."],
              [2, "If the Python expression int(3+4x) = 11 for an integer x, determine the value of x."],
              [24, "If the Python expression int(x+0.5) = 12 holds for a real number x, determine the range for x such that a <= x < b where a and b are real numbers. Enter (a+b)."]
          ],
-   /*4*/ [
+         // 4
+   		 [
              [7, "Researchers are working with a container of water. The level of water in a container is always BETWEEN 2 feet and 10 feet deep. Whenever the water level is an integer, an alarm goes off that notifies the researchers. The sound of the alarm depends on which integer it is. How many different possible sounds can there be?"],
              [3, "The metric system uses powers of 10 to measure quantities. The basic unit of length is a meter, and 1 kilometer has 1000 meters. If the length of a road has to be less than 3542 meters, then how many possible lengths are there such that the number of KILOMETERS is an integer?"],
              [28, "Rounding error can lead to inaccurate measurements in science. Let S be the set of rational numbers that are multiples of (1/5). If the length of a hammer is ROUNDED to be 6 cm and the ACTUAL length is part of the set S, determine 5 TIMES the lowest possible length of the hammer."]
          ],
-   /*5*/ [
+         // 5
+   		 [
              [6, "A box is pushed to the left by Mack and Bob, and pushed to the right by Jack and Jill. If Mack, Bob, and Jack exert a force of 3 N, 5 N, and 2 N respectively, how much force does Jill exert if the box DOES NOT move? "],
              [98, "The force of gravity F is proportional to the mass of an object, where F = mg where g is 9.8 m/s^2. If a box of mass 10 kg hangs from the ceiling using a rope, determine the tension in the rope."],
              [84, "Assume that the force exerted by a person is 3 times the force exerted by a dog. Also, the force exerted by a horse is 952 N. If 10 people and 5 dogs push a box while 1 person and a horse pull it, and the box does not move, determine the force exerted by a SINGLE person. "]
          ],
-   /*6*/ [
+         // 6
+   		 [
              [44, "A chemical reaction takes place where methane (CH4) reacts completely with Oxygen (O2) to generate Carbon Dioxide (CO2) and water (H2O). If 64 g of Oxygen reacts with 16 g of Methane to produce 36 g of water, how many grams of Carbon Dioxide is produced?"],
              [18, "The generation of water molecules can be done by reacting hydrogen gas (H2) with oxygen molecules (O2). In a certain reaction chamber, 50% of the reactants (H2 and O2) actually react to form water. If the chamber starts with 32 g of O2 and 4 g of H2, what is the maximum mass of water (H2O) produced?"],
              [100, "If Calcium ions and Carbonate ions react to form solid Calcium Carbonate (CaCO3). If the 40 g of Calcium ions reacted and the mass of Carbonate ions reacted is 60% the mass of Calcium Carbonate produced, determine the mass of CaCO3 generated from the reaction."]
          ],
-   /*7*/ [
+         // 7
+   		 [
              [1, "The convention unit of a Newton is kg*m/s^2 where kg is kilogram, m is meters, and s is second. How many Newtons would be in a unit designated as g*km/s^2?"],
              [300000, "If an elephant hits a wall with 3 kN (kilonewtons) of force, how many centinewtons (cN) does the elephant exert?"],
              [120, "If a certain metric has units of kg/(m*s^2), determine the value of this metric for a force exerting 30 N over a surface that is 50 cm wide and 50 cm long."]
          ],
-   /*8*/ [
+         // 8
+   		 [
              [3, "Significant Figures (sig-figs) are used to measure quantities in experiments to standardize precision. For a number such as 0.045, the number of sig-figs is equal to the number of digits after AND including the FIRST nonzero digit. Thus, 0.045 has 2 sig-figs. Using this scheme, how many sig-figs does 0.0207 have?"],
              [5, "How many sig-figs does 10.020 have?"],
              [4, "When taking measurements, we drop the last digit and then count the number of  sig-figs. For instance, for a measurement of 2.56 kg, we take it as 2.5 kg to avoid measurement errors. Thus, if a can of water has 101.05 liters,  how many sig-figs would we be counting in?"]
          ],
-   /*9*/ [
+         // 9
+   		 [
              [6, "If  a certain force field applies a force of 8 N for 10 seconds and a force of 5 N for the next 20 seconds, what is the average force over the 30 seconds?"],
              [20, "Constant forces F1, F2, and F3 are applied on an object over a period of time. If the net force is 60 N, what is the average of F1, F2, and F3? "],
              [7, "A force of F1 = 15 N applied for 3 seconds, and force F2 is applied over the next 5 seconds. If the average force over the time period is 10 N, determine the value of F2."]
          ],
-  /*10*/ [
+         // 10
+  		 [
              [90744 , "A cube of lead with a surface area of 24 m^2. What is the mass of the cube in kg? The Density of lead is 11343 kg/m^3."],
              [2, "A material with an unknown density is shaped as a cylinder where the top half has a density 2 TIMES the bottom half. What is the ratio of the mass of the top half to the mass of the bottom half?"],
              [279, "A sphere of Sodium (Na) with radius 3 m reacts with an 169 g of Chloride gas to form solid Sodium Chloride (NaCl). What is the mass of Sodium Chloride produced? The Density of Sodium is 968 kg/m^3. Round to the nearest integer."]
          ],
-  /*11*/ [
+         // 11
+  		 [
              [36, "If the price of a box is proportional to its volume, then what is the mean price if the average volume is 12 m^3? The constant of proportionality is 3. "],
              [3, "Determine the constant of proportionality k for a relation where G = k*L for an input L and an output G, if the average value of L is (1/3) the average value of G."],
              [2, "If instead G = k*L + m*N for inputs L and N, such that k = 2 and the average of N is (2/3) the average of G and the average of L is (1/3) the average of G, determine the value of 4m."]
           ],
-   /*12*/[
+          // 12
+   		 [
              [6, "If the density of material A is twice the density of material B, and a solid made of material A takes up thrice of the volume as material as a solid made of material B, then determine the value of k if (mass of A) = k*(mass of B)."],
              [5, "If a certain metric D for a material  X is inversely proportional to the density d of X, determine the value of (mD)/2V if the constant of proportionality is 10, m is the mass, and V is the volume of a solid made of X."],
              [2, "If the volume of a solid is dependent on the external temperature (direct proportion), by what factor does the density change if the temperature is halved, assuming the mass is constant?"]
          ]
 ];
+*/
+
+// Start level button, which makes the level contents appear upon clicking.
+let START_BTN = document.querySelector("#startBtn");
+if (conAns1[1] == true) {
+	START_BTN.textContent = "Continue Level!";
+}
 
 
 //The purpose of z is to specify under which condition conAns1[i] should assume the user input (basically, ONLY when the i'th connection is clicked!) This is so the comparison with the correct intended answer for the question is executed properly.
@@ -424,6 +626,7 @@ let isFinished = false;
 //div class for all the content (nodes and edges)
 let ALLSTUFF = document.querySelector(".allstuff");
 ALLSTUFF.style.opacity = 0;
+ALLSTUFF.style.display = "none";
 
 let INTROSTUFF = document.querySelector(".introStuff");
 INTROSTUFF.style.opacity = 0;
@@ -432,52 +635,70 @@ INTROSTUFF.style.opacity = 0;
 let lasttext = document.querySelector(".lastText");
 
 //Question box
-let q = document.querySelector(".question");
+let q = document.querySelector(".question_in_side");
+let card_question1 = document.querySelector("#q1_card_question");
+let card_question2 = document.querySelector("#q2_card_question");
+let card_question3 = document.querySelector("#q3_card_question");
+let card_answer1 = document.querySelector("#q1_card_answer");
+let card_answer2 = document.querySelector("#q2_card_answer");
+let card_answer3 = document.querySelector("#q3_card_answer");
 let q_txt1 = document.createTextNode("Question #1 shows up here!");
 let q_txt2 = document.createTextNode("Question #2 shows up here!");
 let q_txt3 = document.createTextNode("Question #3 shows up here!");
-let a = document.querySelector(".answer1");
-let b = document.querySelector(".answer2");
-let c = document.querySelector(".answer3");
-let s = document.querySelector(".sub");
-let h = document.querySelector("#hintBtn");
-let h_txt = document.querySelector("#ModalText");
+let a_txt1 = document.querySelector(".answer1");
+let a_txt2 = document.querySelector(".answer2");
+let a_txt3 = document.querySelector(".answer3");
+let sub_btn = document.querySelector(".sub");
+let hint_btn = document.querySelector("#hintBtn");
+let hint_txt = document.querySelector("#ModalText");
 let pBtn = document.querySelector(".pBtn");
 let mInfo = document.querySelector("#moreInfo");
 
 //Attaching the questions, textareeas, and buttons to the question box
+/*
 q.appendChild(q_txt1);
-q.appendChild(a);
+q.appendChild(a_txt1);
 q.appendChild(q_txt2);
-q.appendChild(b);
+q.appendChild(a_txt2);
 q.appendChild(q_txt3);
-q.appendChild(c)
-q.appendChild(s);
-q.appendChild(h);
+q.appendChild(a_txt3)
+*/
+card_question1.appendChild(q_txt1)
+card_answer1.appendChild(a_txt1);
+card_question2.appendChild(q_txt2)
+card_answer2.appendChild(a_txt2);
+card_question3.appendChild(q_txt3)
+card_answer3.appendChild(a_txt3);
+
+q.appendChild(sub_btn);
+q.appendChild(hint_btn);
 q.appendChild(pBtn);
 
 //Styling for question box
 q.style.marginLeft = "1000px";
-q.style.color = "yellow";
+q.style.color = "black";
 q.style.textAlign = "center";
 q.style.lineHeight = "30px";
 q.style.fontFamily = "cursive";
 
 //Styling for Submit button
-s.style.display = "block";
-s.style.backgroundColor = "yellow";
-s.style.marginLeft = "auto";
-s.style.marginRight = "auto";
-s.style.marginTop = "20px";
-s.addEventListener("click", subT);
+sub_btn.style.display = "block";
+sub_btn.style.backgroundColor = "yellow";
+sub_btn.style.marginLeft = "auto";
+sub_btn.style.marginRight = "auto";
+sub_btn.style.marginTop = "20px";
+sub_btn.addEventListener("click", subT);
 
 //Styling for hints button
-h.style.backgroundColor = "yellow";
-h.style.marginTop = "20px";
+hint_btn.style.backgroundColor = "yellow";
+hint_btn.style.marginTop = "20px";
 
 //Styling Back to Profile button
 pBtn.style.marginTop = "20px";
 pBtn.style.backgroundColor = "yellow";
+
+//Initially do not show the question box
+q.style.display = "none";
 
 /*
 let m = window.matchMedia("(max-width: 1460px)");
@@ -488,19 +709,30 @@ if I(m.matches) {
 }
 */
 
-//Fading everything in
-var tick = function () {
-	ALLSTUFF.style.opacity = +ALLSTUFF.style.opacity + 0.01;
+//Fading directions in
+var tickDirections = function () {
 	INTROSTUFF.style.opacity = +INTROSTUFF.style.opacity + 0.01;
 	
-    if (ALLSTUFF.style.opacity <= 1) {
-          (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    if (INTROSTUFF.style.opacity <= 1) {
+          (window.requestAnimationFrame && requestAnimationFrame(tickDirections)) || setTimeout(tickDirections, 16);
     }
 };
 
-tick();
+tickDirections();
 
 
+//Starting level - fades level contents in
+let showNodes = function () {
+	ALLSTUFF.style.display = "block";
+	
+	ALLSTUFF.style.opacity = +ALLSTUFF.style.opacity + 0.01;
+	if (ALLSTUFF.style.opacity <= 1) {
+        (window.requestAnimationFrame && requestAnimationFrame(showNodes)) || setTimeout(showNodes, 16);
+  }
+}
+
+let showQuestions = function () {
+	q.style.display = "block";
 	var id = setInterval(frame, 5);
 	let pos = 1000;
 	function frame() {
@@ -510,19 +742,87 @@ tick();
 	    pos-=6;
 	    q.style.marginLeft = pos + "px";
 	  }
-	}	
+	}
+}
 
+let startLevel = function () {
+	INTROSTUFF.style.display = "none";
+	showNodes();
+	showQuestions();
+}
+
+START_BTN.addEventListener('click', startLevel);
+
+//Encrypt and encode data in connections and conAns
+async function generateKey() {
+    const key = await window.crypto.subtle.generateKey(
+        { name: "AES-GCM", length: 256 },
+        true,
+        ["encrypt", "decrypt"]
+    );
+    return key;
+}
+
+async function encryptData(data, key) {
+    const encodedData = new TextEncoder().encode(data);
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const encrypted = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        encodedData
+    );
+
+    const combined = new Uint8Array(iv.byteLength + encrypted.byteLength);
+    combined.set(iv);
+    combined.set(new Uint8Array(encrypted), iv.byteLength);
+
+    const base64Encrypted = btoa(String.fromCharCode.apply(null, combined));
+    return base64Encrypted;
+}
+
+
+async function prepareAndEncrypt(ConAnsTemp, ConnectionsTemp) {
+
+	
+    const connectionsKey = await generateKey(); 
+	const conAnsKey = await generateKey(); 
+    const encryptedConnections = await encryptData(ConnectionsTemp, connectionsKey);
+    const encryptedConAns = await encryptData(ConAnsTemp, conAnsKey);
+
+    
+    window.sessionStorage.setItem('connectionKeyAttribute', JSON.stringify(await window.crypto.subtle.exportKey('jwk', connectionsKey)));
+    window.sessionStorage.setItem('conAnsKeyAttribute', JSON.stringify(await window.crypto.subtle.exportKey('jwk', conAnsKey)));
+    document.checkform.connectionAnswerString.value = encodeURIComponent(encryptedConnections);
+	document.checkform.connectionString.value = encodeURIComponent(encryptedConAns);
+    document.checkform.checkBtn.type = "submit";
+}
 
 
 //Sends data from connections1 and conAns1 to another file using the checkpoint button; the other file saves the data for the instance variables in the user object.
 function sendCheckPoint () {
+	let currLevelFinished = <% out.print(tempUser.getIsLevelFinished(level)); %>
+	
+	<% 
+		String strToEncode = "";
+	%>
+	
+	if (currLevelFinished == true) {
+		return;
+	}
+	
 	let ConnectionsTemp = "";
 	for (let k = 0; k < connections1.length; k++) {
 		ConnectionsTemp = ConnectionsTemp + connections1[k];
+		<%--
+		<%
+			tempUser.setConnection(level, connections1[k]);
+		%>
+		--%>
 	}
 	
 	let ConAnsTemp = "";
 	for (let b = 0; b < conAns1.length; b++) {
+		<%--tempUser.setConnectionAnswer(level, conAns1[b]);--%>
 		if (conAns1[b] == true) {
 			ConAnsTemp = ConAnsTemp + "T";
 		}
@@ -531,20 +831,31 @@ function sendCheckPoint () {
 		}
 	}
 	
-	document.checkform.Connections1String.value = ConnectionsTemp;
-	document.checkform.ConAns1String.value = ConAnsTemp;
+	document.checkform.level.value = <%= level %>;
+	
+	
+	//prepareAndEncrypt(ConAnsTemp, ConnectionsTemp);
+	
+	document.checkform.connectionAnswerString.value = ConAnsTemp;
+	document.checkform.connectionString.value = ConnectionsTemp;
+	
+	
+	//session.setAttribute("loggedUser", tempUser);
 	document.checkform.checkBtn.type = "submit";
+	
+	//console.log(ConnectionsTemp);
+	//console.log(ConAnsTemp);
 }
 
 //Makes the checkpoint button dissapear once clicked!
 function closeForm () {
-	document.checkform.Connections1String.value = "";
-	document.checkform.ConAns1String.value = "";
+	document.checkform.connectionAnswerString.value = "";
+	document.checkform.connectionString.value = "";
 	document.checkform.checkBtn.type = "hidden";	
 }
 
 //Each index represents a text box except index = 0!
-let textBoxes = [null, a, b, c];
+let textBoxes = [null, a_txt1, a_txt2, a_txt3];
 
 //Checks the user input with the predefined output, and colors each text area red if the answer is incorrect or green if it is correct!
 function checkAns (n) {
@@ -564,7 +875,7 @@ function checkAns (n) {
 //If the user clicks on an edge that was unlocked, this function restores the answers the user entered, assuming they were all correct.
 function returnAns (n) {
 	//s.removeEventListener("click", subT);
-	s.disabled = true;
+	sub_btn.disabled = true;
 	for (let d = 1; d < textBoxes.length; d++) {
 		textBoxes[d].style.backgroundColor = "lightgreen";
 		textBoxes[d].value = questions1[n][d-1][0];
@@ -813,7 +1124,7 @@ function subT () {
   //Alerts the user if the answer is correct!
   
   if (conAns1[z] == true) {
-	  alert("Correct Answer! You gained 2.5 points!");
+	  alert("Correct Answer! You gained " + <%= pointsPerNode %> + " points!");
   }
   
   
@@ -834,11 +1145,11 @@ function subT () {
 }
 
 
-//Purpose of update is to show the question ONLY  if the correct link is clicked (as determined by k)!
+//Purpose of update is to show the question ONLY if the correct link is clicked (as determined by k)!
 function update (k) {
-  s.disabled = false;
+  sub_btn.disabled = false;
   if (k == 13 && connections1[13] == 1) {
-    q_txt1.nodeValue = "You are done with the game :)";
+    q_txt1.nodeValue = "You are done with the level :)";
     q_txt2.nodeValue = "No more questions!";
     q_txt3.nodeValue = "No more questions!";
     
@@ -858,7 +1169,7 @@ function update (k) {
       q_txt1.nodeValue = questions1[k][0][1];
       q_txt2.nodeValue = questions1[k][1][1];
       q_txt3.nodeValue = questions1[k][2][1];
-      h_txt.innerHTML = hints1[k];
+      hint_txt.innerHTML = hints1[k];
       mInfo.href = hintLinks[k];
       q.scrollIntoView();
       resetAns();
@@ -901,7 +1212,7 @@ connections1[2] = 1;
 
 let Node1 = document.querySelector(".NODE1");
 //let Node1_txt = document.createTextNode("___________ " + "Node 1: " + "Divergence Theorem");
-let Node1_txt = document.createTextNode("PEMDAS");
+let Node1_txt = document.createTextNode(nodes1[1]);
 Line01.style.borderBottomStyle = "solid";
 mature(Node1, Node1_txt);
 
