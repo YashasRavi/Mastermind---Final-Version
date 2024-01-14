@@ -475,41 +475,9 @@ let nodes1 = userNodes;
 
 //Hints for each connection that appears in the modal!
 let hints1 = userHints;
-/*
-let hints1 = ["NULL", 
-			"In Java, the (int) function removes the decimal part of a number. For instance, (int)(4.2) = 4. Similarly in python, int(4.2) = 4. This is called typecasting. Remember in the order of operations, whatever is inside the parenthesis is always done first! So (int)(4+3) = (int)(7) = 7. ", 
-			"Integers include positive and negative numbers and have NO decimals; for instance, -4, 2, and 0 are integers while 0.5 and 1.4 aren't. <br><br> Real numbers include decimals AND integers; thus, numbers such as 1/3, 2.5, -0.4 are all real.  <br><br> Natural numbers are integers GREATER than 0; thus, these would be the counting numbers 1,2,3, etc. <br> <br>Remember that in the order of operations, parenthesis come first! ", 
-			"Recall that integers are  positive and negative numbers and have NO decimals; for instance, -4, 2, and 0 are integers while 0.5 and 1.4 aren't. However, real numbers can be integers OR decimal numbers, so numbers such as 1/3, 2.5, -0.4 are all real. <br> <br> Also remember that in typecasting, the Java function Integer.parseInt() essentially converts a String to an integer. <br> For instance, Integer.parseInt('123') = 123,. <br> <br> The Python int() function removes the decimal portion of the input; thus, int(4.2) = 4, int(3.9) = 3. and int(0.5) = 0.", 
-			"The questions in this set require you to count the number of integers in a range (for the 1st 2 questions) or find the lowest possible number such that it can be ROUNDED to an integer (3rd question). <br> <br> Question 1:  Reading the question can help clarify things. Note that 'between 2 and 10' means GREATER than 2 and LESS than 10. Also, different sounds for each integer basically means distinct integers. <br> <br> Question 2: Note that 3542 meters would be 3.542 kilometers; the length of the road has to be an integer LESS than 3.542. <br> <br> Question 3: The wording could be a bit confusing here. Remember that in rounding, if the decimal part is >=0.5 we round up, else we round down. Think about multiples of (1/5) that are close to 6, such that if we round that multiple we get 6. Then, determine the minimum of those!", 
-			"Note that if an object is not moving, the NET force is 0. This means that the TOTAL force on ONE side is EQUAL to the TOTAL force on the OTHER side. <br> <br> Question 1: Mack and Bob exert 3 N and 5 N, so the total force on their side is 8 N. Jack exerts 2 N of force and we don't know Jill's force, but we know that the TOTAL force from Jill AND Jack has to be 8 N since the box doesn't move! <br> <br> Question 2: The tension in a rope is the force that holds the box up, and gravity pulls the box down. If the box is static, the tension force is the SAME as the force of gravity (which is F = mg). <br> <br> Question 3: Set the dog's force as a variable, and keep track of who is on each side. Also note that the box doesn't move, so the TOTAL force from each side has to be the same!", 
-			"These questions mostly require the law of conservation of mass, which states that the TOTAL mass of reactants is equal to the TOTAL mass of products. <br> <br> Question 1: We know the mass of Oxygen and Methane that reacted and the mass of H2O produced. Note that mass(O2) + mass(Methane) = mass(CO2) + mass(H2O). <br> <br> Question 2: This question is similar to question #1, but make sure that in this case, 0.5*(total mass of reactants) = total mass of products. The mass of the product CANNOT exceed the mass of reactants, so mass(H2O) has to be LESS than 0.5*(mass(H2) + mass(O2))! <br> <br> Question 3: Here, we are given the mass of one of the reactants (Carbonate) as a PROPORTION of the mass of the product (CaCO3). Thus, mass(Calcium) + 0.6*mass(CaCO3) = mass(CaCO3).", 
-			"Note common uses such as 1 km = 1000 m, 1 kg = 1000 g, 1 kN = 1000 N, etc. kilo- means 'thousand'! Also, centi- means 'hundred', so 1 m = 100 cm and 1 g = 100 cg (centigrams). <br> <br> Question 1: Convert g to kg and km to m to convert g*km/s^2 to the familiar 1 N = kg*m/s^2! <br> <br> Question 2: Note that 1 N has 100 cN and 1 kN has 1000 N. <br> <br> Question 3: The metric kg/(m*s^2) is the same as (kg*m/s^2)/m^2, or Force per unit area (the pressure)! Also be careful that force is in meters while the dimensions of the surface are given in cm!", 
-			"For sig-figs, locate the FIRST nonzero number, and count EVERY digit after (AND including) that number. <br> <br> For example, for 12.1, this has 3 sig-figs since the 1st non zero digit is the 1 (in the tens place), and there are 3 digits after and including that. <br> <br> Another example is 230.06 which has 5  sig-figs since the first nonzero digit is the 2 in the hundreds place, and there are 5 digits after and including the 2. <br> <br> For actual measurements, drop the last digit, so 101.05 liters is counted as 101.0 liters; now enter how many sig-figs 101.0 has!", 
-			"Average force means the weighted average force over the time period. So if a force acts such as F = F1 over t1 seconds and F = F2 over t2 seconds, then the average force is (F1*t1 + F2*t2)/(t1+t2). Basically the weighted sum of forces over the FULL time interval. <br> <br> Note that this is different from the average OF multiple forces (question #2), which is simply the sum of forces divided by the number of forces!", 
-			"Remember that mass = volume * density! <br> <br> Question 1: recall that if the side length of a cube is s, then SA = 6s^2 and volume = s^3. <br> <br> Question 2: The top and bottom half have the same volume, so mass depends only on density! The question asks for a RATIO; in this case, (Mass of top half)/(Mass of bottom half). <br> <br> Question 3: Find the mass of Sodium first! Recall that the volume of a sphere is (4/3)(3.14)*r^3 where r is the radius. Also remember that the total mass of NaCl product is the sum of masses of the reactants (Sodium and Chloride)!", 
-			"An important thing to know about these questions is that for a proportion y = kx, then (average of y) = k*(average of x). This can be used to solve questions #1 and #2. <br> <br> For question #3, it is helpful to write the average of L and N in TERMS of the average of G. As such, (average G) = 2*((1/3) * average G) + m * ((2/3) * average G). Now you can solve for m!", 
-			"Recall that Mass/Volume = density, and make sure to remember that direct proportion between A and B means A=kB and inverse proportion means AB = k. <br> <br> Question 1: Recall that Mass = volume * density, so what happens to the mass if volume is tripled and density is doubled? <br> <br> Question 2: If D is inversely proportional to d, then D*d = constant of proportionality. Recall that d = m/V, so after substitution notice that we have mD/V = 2*(mD/2V)! <br> <br> Question 3: Note that d = m/V so if V = kT where T is temperature, then d = m/(kT). Thus, what happens if T is halved?"
-			];
-*/
+
 //Links that the "Click for more information!" box redirects user to in the Hint modal.
 let hintLinks = userHintLinks;
-/*
-let hintLinks = [
-	"NULL",
-	"https://en.wikipedia.org/wiki/Type_conversion",
-	"https://www.mathsisfun.com/sets/number-types.html",
-	"https://www.mathsisfun.com/algebra/equation-formula.html",
-	"https://www.splashlearn.com/math-vocabulary/geometry/metric-system#:~:text=The%20metric%20system%20is%20a,and%20weight%20(mass)%20respectively.&text=The%20units%20to%20the%20left,the%20unit%20to%20its%20right.",
-	"https://www.physicsclassroom.com/class/newtlaws/Lesson-2/The-Meaning-of-Force",
-	"https://www.khanacademy.org/science/biology/chemistry--of-life/chemical-bonds-and-reactions/a/chemical-reactions-article",
-	"https://www.physicsclassroom.com/class/newtlaws/Lesson-2/The-Meaning-of-Force",
-	"https://www.khanacademy.org/science/biology/chemistry--of-life/chemical-bonds-and-reactions/a/chemical-reactions-article",
-	"https://www.statisticshowto.com/probability-and-statistics/statistics-definitions/mean-median-mode/",
-	"https://www.britannica.com/science/density",
-	"https://www.mathsisfun.com/algebra/proportions.html",
-	"https://www.mathsisfun.com/algebra/proportions.html"
-];
-*/
 
 let questions1 = []
 
@@ -528,87 +496,6 @@ for (let i = 0; i < userQuestions.length; i++) {
 	questions1.push(questionAnswerPairs);
 }
 
-/*
-let questions1 = [
-      // [Answer, Question]
-      	 // 0 - set to null so tracing code is easier!
-  		 [
-             [0, "NULL"] 
-         ],
-		 // 1
-    	 [
-             [8, "Evaluate the Java expression 5+(int)(3.7)."],
-             [15, "Evaluate the Python expression int(3+int(12.4))."],
-             [0, "Evaluate the Java expression ((int)(0.7)/4)."]
-         ],
-         // 2
-   		 [
-             [1, "If n is a natural number and (3+(4+n)) is even, determine the lowest possible value of n."],
-             [3, "If n is a natural number such that 1 < n < 4, and (7+3n)/(5-n) is an integer, determine the value of n."],
-             [4, "If q is a positive real number and q/sqrt(2) is an integer, determine the lowest possible value of q^4."]
-         ],
-         // 3
-   		 [
-             [2, "If the Java expression (x+Integer.parseInt('12')) = 14 holds for a real number x, determine the value of x."],
-             [2, "If the Python expression int(3+4x) = 11 for an integer x, determine the value of x."],
-             [24, "If the Python expression int(x+0.5) = 12 holds for a real number x, determine the range for x such that a <= x < b where a and b are real numbers. Enter (a+b)."]
-         ],
-         // 4
-   		 [
-             [7, "Researchers are working with a container of water. The level of water in a container is always BETWEEN 2 feet and 10 feet deep. Whenever the water level is an integer, an alarm goes off that notifies the researchers. The sound of the alarm depends on which integer it is. How many different possible sounds can there be?"],
-             [3, "The metric system uses powers of 10 to measure quantities. The basic unit of length is a meter, and 1 kilometer has 1000 meters. If the length of a road has to be less than 3542 meters, then how many possible lengths are there such that the number of KILOMETERS is an integer?"],
-             [28, "Rounding error can lead to inaccurate measurements in science. Let S be the set of rational numbers that are multiples of (1/5). If the length of a hammer is ROUNDED to be 6 cm and the ACTUAL length is part of the set S, determine 5 TIMES the lowest possible length of the hammer."]
-         ],
-         // 5
-   		 [
-             [6, "A box is pushed to the left by Mack and Bob, and pushed to the right by Jack and Jill. If Mack, Bob, and Jack exert a force of 3 N, 5 N, and 2 N respectively, how much force does Jill exert if the box DOES NOT move? "],
-             [98, "The force of gravity F is proportional to the mass of an object, where F = mg where g is 9.8 m/s^2. If a box of mass 10 kg hangs from the ceiling using a rope, determine the tension in the rope."],
-             [84, "Assume that the force exerted by a person is 3 times the force exerted by a dog. Also, the force exerted by a horse is 952 N. If 10 people and 5 dogs push a box while 1 person and a horse pull it, and the box does not move, determine the force exerted by a SINGLE person. "]
-         ],
-         // 6
-   		 [
-             [44, "A chemical reaction takes place where methane (CH4) reacts completely with Oxygen (O2) to generate Carbon Dioxide (CO2) and water (H2O). If 64 g of Oxygen reacts with 16 g of Methane to produce 36 g of water, how many grams of Carbon Dioxide is produced?"],
-             [18, "The generation of water molecules can be done by reacting hydrogen gas (H2) with oxygen molecules (O2). In a certain reaction chamber, 50% of the reactants (H2 and O2) actually react to form water. If the chamber starts with 32 g of O2 and 4 g of H2, what is the maximum mass of water (H2O) produced?"],
-             [100, "If Calcium ions and Carbonate ions react to form solid Calcium Carbonate (CaCO3). If the 40 g of Calcium ions reacted and the mass of Carbonate ions reacted is 60% the mass of Calcium Carbonate produced, determine the mass of CaCO3 generated from the reaction."]
-         ],
-         // 7
-   		 [
-             [1, "The convention unit of a Newton is kg*m/s^2 where kg is kilogram, m is meters, and s is second. How many Newtons would be in a unit designated as g*km/s^2?"],
-             [300000, "If an elephant hits a wall with 3 kN (kilonewtons) of force, how many centinewtons (cN) does the elephant exert?"],
-             [120, "If a certain metric has units of kg/(m*s^2), determine the value of this metric for a force exerting 30 N over a surface that is 50 cm wide and 50 cm long."]
-         ],
-         // 8
-   		 [
-             [3, "Significant Figures (sig-figs) are used to measure quantities in experiments to standardize precision. For a number such as 0.045, the number of sig-figs is equal to the number of digits after AND including the FIRST nonzero digit. Thus, 0.045 has 2 sig-figs. Using this scheme, how many sig-figs does 0.0207 have?"],
-             [5, "How many sig-figs does 10.020 have?"],
-             [4, "When taking measurements, we drop the last digit and then count the number of  sig-figs. For instance, for a measurement of 2.56 kg, we take it as 2.5 kg to avoid measurement errors. Thus, if a can of water has 101.05 liters,  how many sig-figs would we be counting in?"]
-         ],
-         // 9
-   		 [
-             [6, "If  a certain force field applies a force of 8 N for 10 seconds and a force of 5 N for the next 20 seconds, what is the average force over the 30 seconds?"],
-             [20, "Constant forces F1, F2, and F3 are applied on an object over a period of time. If the net force is 60 N, what is the average of F1, F2, and F3? "],
-             [7, "A force of F1 = 15 N applied for 3 seconds, and force F2 is applied over the next 5 seconds. If the average force over the time period is 10 N, determine the value of F2."]
-         ],
-         // 10
-  		 [
-             [90744 , "A cube of lead with a surface area of 24 m^2. What is the mass of the cube in kg? The Density of lead is 11343 kg/m^3."],
-             [2, "A material with an unknown density is shaped as a cylinder where the top half has a density 2 TIMES the bottom half. What is the ratio of the mass of the top half to the mass of the bottom half?"],
-             [279, "A sphere of Sodium (Na) with radius 3 m reacts with an 169 g of Chloride gas to form solid Sodium Chloride (NaCl). What is the mass of Sodium Chloride produced? The Density of Sodium is 968 kg/m^3. Round to the nearest integer."]
-         ],
-         // 11
-  		 [
-             [36, "If the price of a box is proportional to its volume, then what is the mean price if the average volume is 12 m^3? The constant of proportionality is 3. "],
-             [3, "Determine the constant of proportionality k for a relation where G = k*L for an input L and an output G, if the average value of L is (1/3) the average value of G."],
-             [2, "If instead G = k*L + m*N for inputs L and N, such that k = 2 and the average of N is (2/3) the average of G and the average of L is (1/3) the average of G, determine the value of 4m."]
-          ],
-          // 12
-   		 [
-             [6, "If the density of material A is twice the density of material B, and a solid made of material A takes up thrice of the volume as material as a solid made of material B, then determine the value of k if (mass of A) = k*(mass of B)."],
-             [5, "If a certain metric D for a material  X is inversely proportional to the density d of X, determine the value of (mD)/2V if the constant of proportionality is 10, m is the mass, and V is the volume of a solid made of X."],
-             [2, "If the volume of a solid is dependent on the external temperature (direct proportion), by what factor does the density change if the temperature is halved, assuming the mass is constant?"]
-         ]
-];
-*/
 
 // Start level button, which makes the level contents appear upon clicking.
 let START_BTN = document.querySelector("#startBtn");
